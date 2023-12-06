@@ -1,0 +1,46 @@
+# This is a basic workflow to build and deploy a docker container
+
+name: DockerBuild
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: node-js-server
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # set a short sha to use as tag
+      - name: Add dynamic envs
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout 
+        uses: actions/checkout@v2
+      - uses: docker/login-action@v1
+        with:
+          registry: registry.devopsnow.io
+          username: ${{ secrets.DEVOPSNOW_DOCKER_INTERNAL_ROBOT_USER }}
+          password: ${{ secrets.DEVOPSNOW_DOCKER_INTERNAL_ROBOT_PASS }}
+      # Can use tag like "registry.devopsnow.io/internal/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.SHORT_SHA }}"
+      # but since repo only creates single image, APP_NAME is not needed
+      - name: Build image 
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          tags: "registry.devopsnow.io/internal/${{ github.repository }}:${{ env.SHORT_SHA }}"
+      - name: Push image
+        run: docker push "registry.devopsnow.io/internal/${{ github.repository }}:${{ env.SHORT_SHA }}"
+
