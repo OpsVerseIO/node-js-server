@@ -1,12 +1,11 @@
 name: Development
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
+    branches: [ "main" ]
+
   workflow_call:
 
 jobs:
