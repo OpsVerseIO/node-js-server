@@ -1,0 +1,14 @@
+{
+  "name": "js-server",
+  "version": "1.0.0",
+  "description": "A simple REST server written in node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "OpsVerse",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
