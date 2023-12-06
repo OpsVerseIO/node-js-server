@@ -40,7 +40,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          tags: "registry.devopsnow.io/internal/${{ github.repository }}:${{ env.SHORT_SHA }}"
+          tags: "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
       - name: Push image
-        run: docker push "registry.devopsnow.io/internal/${{ github.repository }}:${{ env.SHORT_SHA }}"
+        run: docker push "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
 
