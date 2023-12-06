@@ -1,9 +1,9 @@
 var express = require('express');
 var app = express();
 app.get('/', function (req, res) {
-  console.log('Serving endpoint /');  
-  res.send('Hello World!');
+  console.log('🔍 Serving endpoint "/"');
+  res.send(returnHelloMessage());
 });
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('🚀 Server is started and is listening on port 3000!');
 });
