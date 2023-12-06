@@ -18,7 +18,6 @@ spec:
       required:
         - component_id
         - owner
-        - java_package_name
       properties:
         component_id:
           title: Name
@@ -61,7 +60,6 @@ spec:
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
           artifact_id: ${{ parameters.component_id }}
-          java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
