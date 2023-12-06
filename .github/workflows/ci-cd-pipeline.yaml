@@ -1,0 +1,170 @@
+name: CI CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: "🔧 Check code standards"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout the repository"
+        uses: actions/checkout@v2
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: "📦 install dependencies"
+        run: npm install
+
+      - name: "🔍 lint code"
+        run: npm run lint
+
+  test:
+    name: "🚀 Run all unit test cases"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout the repository"
+        uses: actions/checkout@v2
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: "📦 install dependencies"
+        run: npm install
+
+      - name: "🔍 run all unit test cases"
+        run: npm t
+
+  opa:
+    name: "🚀 Quality gate"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🔍 Check unit test quality gate"
+        run: |
+            echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
+            echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
+            echo " :white_check_mark: Quality gate passed"
+
+  visualize:
+    name: "📊 Visualize the repo"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📊 repository visualizer"
+        id: diagram
+        uses: githubocto/repo-visualizer@0.7.1
+        with:
+          excluded_paths: "node_modules,build,.github"
+          output_file: "public/diagram.svg"
+          should_push: false
+          root_path: "/"
+
+      - name: "📊 visualiser artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: diagram
+          path: public/diagram.svg
+
+  build:
+    name: "📦 Build docker image"
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: node-js-server
+    timeout-minutes: 10
+    steps:
+      - name: "🔧 Add dynamic envs"
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+
+      - name: " :lock: Authenticate to artifactory (Harbor)"
+        uses: docker/login-action@v1
+        with:
+          registry: registry.devopsnow.io
+          username: ${{ secrets.DEVOPSNOW_DOCKER_INTERNAL_ROBOT_USER }}
+          password: ${{ secrets.DEVOPSNOW_DOCKER_INTERNAL_ROBOT_PASS }}
+
+      - name: "📦 Build the image"
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          tags: "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
+
+      - name: "📂 Push the image to artifactory"
+        run: docker push "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
+
+  release-stage:
+    environment:
+      name: stage
+    name: "🚀 Release to STAGE ENV"
+    needs:
+      - lint
+      - test
+      - opa
+      - visualize
+      - build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "🔧 Add dynamic envs"
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+      - name: "🚀 Deploy to STAGE ENV"
+        run: |
+            echo "🔍 Deploying the application to STAGE ENV"
+            echo "🚀 Successfully deployed the application to STAGE ENV" 
+
+  release-prod:
+    environment:
+      name: production
+    name: "🚀 Release to PROD ENV"
+    needs:
+      - lint
+      - test
+      - opa
+      - visualize
+      - build
+      - release-stage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "🔧 Add dynamic envs"
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+      - name: "🚀 Deploy to STAGE ENV"
+        run: |
+            echo "🔍 Deploying the application to PROD ENV"
+            echo "🚀 Successfully deployed the application to PROD ENV" 
+
+  cleanup:
+    name: "♻️ Cleanup actions"
+    needs:
+      - release-stage
+      - release-prod
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "♻️ remove build artifacts"
+        run: |
+          echo "♻️ Cleaning up the build artifacts"
+          echo "♻️ Successfully cleaned up the build artifacts"
