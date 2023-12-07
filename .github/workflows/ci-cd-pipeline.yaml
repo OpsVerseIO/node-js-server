@@ -96,6 +96,8 @@ jobs:
       - name: "🔧 Add dynamic envs"
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+          echo "SHA= ${GITHUB_SHA}"
+          echo "SHORT SHA= ${SHORT_SHA}"
 
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
