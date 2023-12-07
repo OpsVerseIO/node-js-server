@@ -55,6 +55,14 @@ jobs:
             echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
             echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
             echo "✅ Quality gate passed"
+    container:
+      image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:6f08f838
+      env:
+        OPA_ENDPOINT: "https://opa.int.devopsnow.io"
+        DATA: "{\"input\": {\"codecoverage\": 90}}"
+        POLICY_NAME: "policies/codecoverage.rego"
+        RULE_NAME: "allow"
+        EXIT_ON_FAIL: "true"
 
   visualize:
     name: "📊 Visualize the repository"
