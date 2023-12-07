@@ -49,12 +49,12 @@ jobs:
     needs:
       - lint
       - test
-    steps:
-      - name: "🔍 Check unit test quality gate"
-        run: |
-            echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
-            echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
-            echo "✅ Quality gate passed"
+    # steps:
+    #   - name: "🔍 Check unit test quality gate"
+    #     run: |
+    #         echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
+    #         echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
+    #         echo "✅ Quality gate passed"
     container:
       image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:6f08f838
       env:
