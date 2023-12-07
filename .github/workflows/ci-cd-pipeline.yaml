@@ -50,7 +50,7 @@ jobs:
       - lint
       - test
     container:
-      image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:6f08f838
+      image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b
       env:
         OPA_ENDPOINT: "https://opa.int.devopsnow.io"
         DATA: "{\"input\": {\"codecoverage\": 90}}"
