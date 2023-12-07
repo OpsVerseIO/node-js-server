@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+      - master
 
 jobs:
   lint:
-    name: "🔧 Check code standards"
+    name: "🕵🏻‍♂️ Check code standards"
     runs-on: ubuntu-latest
     steps:
       - name: "☁️ checkout the repository"
@@ -21,7 +22,7 @@ jobs:
       - name: "📦 install dependencies"
         run: npm install
 
-      - name: "🔍 lint code"
+      - name: "🔧 lint code"
         run: npm run lint
 
   test:
@@ -43,7 +44,7 @@ jobs:
         run: npm t
 
   opa:
-    name: "🚀 Quality gate"
+    name: "🚀 Quality gates using Open Policy Agent (OPA)"
     runs-on: ubuntu-latest
     needs:
       - lint
@@ -53,7 +54,7 @@ jobs:
         run: |
             echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
             echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
-            echo " :white_check_mark: Quality gate passed"
+            echo "✅ Quality gate passed"
 
   visualize:
     name: "📊 Visualize the repository"
@@ -99,7 +100,7 @@ jobs:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
 
-      - name: " :lock: Authenticate to artifactory (Harbor)"
+      - name: "🔒 Authenticate to artifactory (Harbor) 🔓"
         uses: docker/login-action@v1
         with:
           registry: registry.devopsnow.io
@@ -139,8 +140,8 @@ jobs:
 
       - name: "🚀 Deploy to STAGE ENV"
         run: |
-            echo "🔍 Deploying the application to STAGE ENV"
-            echo "🚀 Successfully deployed the application to STAGE ENV" 
+            echo "⏳ Deploying the application to STAGE ENV"
+            echo "🚀✅ Successfully deployed the application to STAGE ENV" 
 
   release-prod:
     environment:
@@ -167,8 +168,8 @@ jobs:
 
       - name: "🚀 Deploy to PROD ENV"
         run: |
-            echo "🔍 Deploying the application to PROD ENV"
-            echo "🚀 Successfully deployed the application to PROD ENV" 
+            echo "⏳ Deploying the application to PROD ENV"
+            echo "🚀✅ Successfully deployed the application to PROD ENV" 
 
   cleanup:
     name: "♻️ Cleanup actions"
@@ -181,4 +182,4 @@ jobs:
       - name: "♻️ remove build artifacts"
         run: |
           echo "♻️ Cleaning up the build artifacts"
-          echo "♻️ Successfully cleaned up the build artifacts"
+          echo "♻️✅ Successfully cleaned up the build artifacts"
