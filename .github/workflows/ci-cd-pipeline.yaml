@@ -261,8 +261,6 @@ jobs:
       - lint
       - test
       - opa
-      - opa-sonarqube
-      - opa-code-coverage
       - visualize
     timeout-minutes: 10
     steps:
@@ -299,8 +297,6 @@ jobs:
       - lint
       - test
       - opa
-      - opa-sonarqube
-      - opa-code-coverage
       - visualize
       - build
     runs-on: ubuntu-latest
@@ -343,8 +339,6 @@ jobs:
       - lint
       - test
       - opa
-      - opa-sonarqube
-      - opa-code-coverage
       - visualize
       - build
       - release-stage
@@ -416,8 +410,6 @@ jobs:
       - lint
       - test
       - opa
-      - opa-sonarqube
-      - opa-code-coverage
       - visualize
       - build
       - release-stage
