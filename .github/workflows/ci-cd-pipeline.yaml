@@ -63,6 +63,45 @@ jobs:
             echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
             echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
             echo "✅ Quality gate passed"
+
+      - name: "Run Python script"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            from opa_client.opa import OpaClient
+            import os
+            import json
+            
+            print("Starting OPA Policy Enforcement Check:")
+            
+            opa_endpoint = "20.237.56.131"
+            policy_name = "policies/codecoverage.rego"
+            rule_name = "allow"
+            
+            client = OpaClient(host=opa_endpoint)
+            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
+            
+            print("\nOPA Service running at: " + opa_endpoint)
+            print("\nValidating policy: " + policy_name)
+            print("\nValidating rule: " + rule_name)
+            
+            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
+            del client
+            print("\nOPA Server Response:\n")
+            print(policy_check)
+            
+            # If result is not defined or false, then exit
+            if 'result' not in policy_check or not policy_check['result']:
+                print("\n\nOPA Policy Check Failed!")
+                if exit_on_fail:
+                    print("\nExiting on policy check failure")
+                    exit(1)
+            
+            print("\nEnd OPA Policy Check")
+
       - name: "Run Policy checking"
         run: |
           docker run -d registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b -e OPA_ENDPOINT="20.237.56.131" -e DATA="{\"input\": {\"codecoverage\": 90}}" -e POLICY_NAME="policies/codecoverage.rego" -e RULE_NAME="allow" -e EXIT_ON_FAIL="true"
