@@ -58,11 +58,26 @@ jobs:
         RULE_NAME: "allow"
         EXIT_ON_FAIL: "true"
     steps:
-      - name: "🔍 Check unit test quality gate"
+      - name: "🔍 Check unit test quality gate" 
         run: |
             echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
             echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
             echo "✅ Quality gate passed"
+      - name: "Run Policy checking"
+        run: |
+          docker run -d registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b -e OPA_ENDPOINT="20.237.56.131" -e DATA="{\"input\": {\"codecoverage\": 90}}" -e POLICY_NAME="policies/codecoverage.rego" -e RULE_NAME="allow" -e EXIT_ON_FAIL="true"
+
+      # - name: "Run the build process with Docker"
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b
+      #     options: 
+      #     env:
+      #       OPA_ENDPOINT: "https://opa.int.devopsnow.io"
+      #       DATA: "{\"input\": {\"codecoverage\": 90}}"
+      #       POLICY_NAME: "policies/codecoverage.rego"
+      #       RULE_NAME: "allow"
+      #       EXIT_ON_FAIL: "true"
 
   visualize:
     name: "📊 Visualize the repository"
