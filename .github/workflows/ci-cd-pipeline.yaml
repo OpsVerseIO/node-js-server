@@ -26,7 +26,7 @@ jobs:
         run: npm run lint
 
   test:
-    name: "🚨 Run all unit test cases"
+    name: "🚨 Run unit test cases"
     runs-on: ubuntu-latest
     steps:
       - name: "☁️ checkout the repository"
@@ -197,6 +197,7 @@ jobs:
             echo "🚀✅💚 Successfully deployed the application to STAGE ENV"
   
   integration-test:
+    name: "🚨 Run integration test suite"
     needs:
       - lint
       - test
@@ -204,7 +205,6 @@ jobs:
       - visualize
       - build
       - release-stage
-    name: "🚨 Run all integration test suite"
     runs-on: ubuntu-latest
     steps:
       - name: "📩📨 Message from Open Policy Agent (OPA) Server"
@@ -213,9 +213,8 @@ jobs:
           echo "⌛ Connecting to STAGE application at: https://staging-server.opsverse.io"
           echo "✅💚 Integration tests passed"
 
-  opa-integration-test:
+  integration-test-opa:
     name: "🚧 Quality gates using Open Policy Agent (OPA)"
-    runs-on: ubuntu-latest
     needs:
       - lint
       - test
@@ -224,6 +223,7 @@ jobs:
       - build
       - release-stage
       - integration-test
+    runs-on: ubuntu-latest 
     steps:
       - name: "🚧 Integration test quality gate"
         run: |
@@ -281,6 +281,7 @@ jobs:
           echo "{'result': True}"
           echo "End OPA Policy Check"
           echo "✅💚 Quality gate passed"
+
   release-prod:
     environment:
       name: production
@@ -293,7 +294,7 @@ jobs:
       - build
       - release-stage
       - integration-test
-      - opa-integration-test
+      - integration-test-opa
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
