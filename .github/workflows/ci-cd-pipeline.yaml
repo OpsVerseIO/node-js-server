@@ -320,6 +320,23 @@ jobs:
             echo "⏳ Deploying the application to STAGE"
             echo "🚀✅💚 Successfully deployed the application to STAGE"
 
+  integration-test:
+    name: "🚨 Run integration test suite"
+    needs:
+      - lint
+      - test
+      - opa
+      - visualize
+      - build
+      - release-stage
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📩📨 Message from Open Policy Agent (OPA) Server"
+        run: |
+          echo "Running integration test suite"
+          echo "⌛ Connecting to STAGE application at: https://staging-server.opsverse.io"
+          echo "✅💚 Integration tests passed"         
+
   integration-test-opa:
     name: "🚧 Integration tests gate"
     needs:
