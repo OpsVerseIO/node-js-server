@@ -119,12 +119,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "📊 Repository visualizer"
-        uses: githubocto/repo-visualizer@0.7.1
+        uses: githubocto/repo-visualizer@master
         with:
           excluded_paths: "node_modules,.github"
-          output_file: "src/diagram.svg"
-          should_push: false
-          root_path: "/"
+          # output_file: "src/diagram.svg"
+          # should_push: false
+          # root_path: "/"
 
       - name: "📊 Visualiser artifacts"
         uses: actions/upload-artifact@v2
