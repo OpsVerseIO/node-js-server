@@ -64,6 +64,7 @@ jobs:
             echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
             echo "✅ Quality gate passed"
 
+      - uses: actions/checkout@v3
       - name: "Run Python script"
         uses: actions/setup-python@v4
         with:
