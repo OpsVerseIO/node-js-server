@@ -50,34 +50,18 @@ jobs:
       - lint
       - test
     steps:
-      - name: "🔍⏳ Check unit test quality gate"
+      - name: "🚧 Unit test quality gate"
         run: |
-          echo "🔍 Connecting to Open Policy Agent (OPA) at: 20.237.56.131"
+          echo "⌛ Connecting to Open Policy Agent (OPA) at: 20.237.56.131"
       - uses: actions/checkout@v4
       - name: "🔧 Set up Python"
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: "🔍 Install dependencies"
+      - name: "📦 Install dependencies"
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      # - name: "🔍⏳ Check unit test quality gate"
-      #   run: |
-      #       echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
-      #       echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
-      #       echo "✅ Quality gate passed"
-
-      # - uses: actions/checkout@v3
-      # - name: "🔧Setup Python"
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.10'
-      #     cache: 'pip'
-      # - name: Install dependencies
-      #   uses: py-actions/py-dependency-install@v4
-      #   with:
-      #       path: "requirements.txt"
       - name: "⏳ Validate quality using OPA"
         uses: jannekem/run-python-script-action@v1
         with:
@@ -132,7 +116,7 @@ jobs:
       - opa
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "📊 repository visualizer"
         uses: githubocto/repo-visualizer@0.7.1
