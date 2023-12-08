@@ -46,20 +46,9 @@ jobs:
   opa:
     name: "🚀 Quality gates using Open Policy Agent (OPA)"
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     needs:
       - lint
       - test
-    # container:
-    #   image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b
-    #   env:
-    #     OPA_ENDPOINT: "https://opa.int.devopsnow.io"
-    #     DATA: "{\"input\": {\"codecoverage\": 90}}"
-    #     POLICY_NAME: "policies/codecoverage.rego"
-    #     RULE_NAME: "allow"
-    #     EXIT_ON_FAIL: "true"
     steps:
       - name: "🔍⏳ Check unit test quality gate"
         run: |
@@ -73,38 +62,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: "⏳ Validate quality using OPA"
-        run: |
-          from opa_client.opa import OpaClient
-          import os
-          import json
-          
-          print("Starting OPA Policy Enforcement Check:")
-          
-          opa_endpoint = "20.237.56.131"
-          policy_name = "policies/codecoverage.rego"
-          rule_name = "allow"
-          
-          client = OpaClient(host=opa_endpoint)
-          exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
-          
-          print("\nOPA Service running at: " + opa_endpoint)
-          print("\nValidating policy: " + policy_name)
-          print("\nValidating rule: " + rule_name)
-          
-          policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-          del client
-          print("\nOPA Server Response:\n")
-          print(policy_check)
-          
-          # If result is not defined or false, then exit
-          if 'result' not in policy_check or not policy_check['result']:
-              print("\n\nOPA Policy Check Failed!")
-              if exit_on_fail:
-                  print("\nExiting on policy check failure")
-                  exit(1)
-          
-          print("\nEnd OPA Policy Check")
       # - name: "🔍⏳ Check unit test quality gate"
       #   run: |
       #       echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
@@ -121,7 +78,8 @@ jobs:
       #   uses: py-actions/py-dependency-install@v4
       #   with:
       #       path: "requirements.txt"
-      - uses: jannekem/run-python-script-action@v1
+      - name: "⏳ Validate quality using OPA"
+        uses: jannekem/run-python-script-action@v1
         with:
           script: |
             from opa_client.opa import OpaClient
