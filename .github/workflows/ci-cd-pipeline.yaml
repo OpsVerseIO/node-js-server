@@ -46,23 +46,35 @@ jobs:
   opa:
     name: "🚀 Quality gates using Open Policy Agent (OPA)"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     needs:
       - lint
       - test
-    container:
-      image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b
-      env:
-        OPA_ENDPOINT: "https://opa.int.devopsnow.io"
-        DATA: "{\"input\": {\"codecoverage\": 90}}"
-        POLICY_NAME: "policies/codecoverage.rego"
-        RULE_NAME: "allow"
-        EXIT_ON_FAIL: "true"
+    # container:
+    #   image: registry.devopsnow.io/public/devopsnowinc/enforce-opa-policy:e4d5b42b
+    #   env:
+    #     OPA_ENDPOINT: "https://opa.int.devopsnow.io"
+    #     DATA: "{\"input\": {\"codecoverage\": 90}}"
+    #     POLICY_NAME: "policies/codecoverage.rego"
+    #     RULE_NAME: "allow"
+    #     EXIT_ON_FAIL: "true"
     steps:
-      - name: "🔍 Check unit test quality gate" 
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
         run: |
-            echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
-            echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
-            echo "✅ Quality gate passed"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      # - name: "🔍 Check unit test quality gate" 
+      #   run: |
+      #       echo "🔍 Connecting to Open Policy Agent (OPA) using URL: https://opa.opsverse.io"
+      #       echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
+      #       echo "✅ Quality gate passed"
 
       - uses: actions/checkout@v3
       - name: "Setup Python"
