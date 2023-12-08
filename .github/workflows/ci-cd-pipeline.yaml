@@ -115,10 +115,10 @@ jobs:
       - test
       - opa
     steps:
-      - name: "☁️ checkout repository"
+      - name: "☁️ Checkout repository"
         uses: actions/checkout@v4
 
-      - name: "📊 repository visualizer"
+      - name: "📊 Repository visualizer"
         uses: githubocto/repo-visualizer@0.7.1
         with:
           excluded_paths: "node_modules,.github"
@@ -126,7 +126,7 @@ jobs:
           should_push: false
           root_path: "/"
 
-      - name: "📊 visualiser artifacts"
+      - name: "📊 Visualiser artifacts"
         uses: actions/upload-artifact@v2
         with:
           name: diagram
