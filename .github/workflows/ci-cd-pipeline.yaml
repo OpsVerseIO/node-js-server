@@ -64,6 +64,13 @@ jobs:
             echo "🚀 Successfully connected to Open Policy Agent (OPA)" 
             echo "✅ Quality gate passed"
 
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v4
+        with:
+          path: "requirements.txt"
+          update-pip: "false"
+          update-setuptools: "false"
+          update-wheel: "false"
       - name: "Run Python script"
         uses: actions/setup-python@v4
         with:
