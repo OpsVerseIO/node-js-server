@@ -358,6 +358,8 @@ jobs:
       - opa
       - visualize
       - build
+      - argo-sync-stage
+      - argo-sync-stage
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -383,6 +385,8 @@ jobs:
       - opa
       - visualize
       - build
+      - argo-sync-stage
+      - argo-sync-stage
       - release-stage
     runs-on: ubuntu-latest
     steps:
@@ -400,6 +404,8 @@ jobs:
       - opa
       - visualize
       - build
+      - argo-sync-stage
+      - argo-sync-stage
       - release-stage
       - integration-test
     runs-on: ubuntu-latest 
@@ -471,6 +477,8 @@ jobs:
       - opa
       - visualize
       - build
+      - argo-sync-stage
+      - argo-sync-stage
       - release-stage
       - integration-test
       - integration-test-opa
