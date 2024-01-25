@@ -322,28 +322,7 @@ jobs:
             manifests/stage/deployment.yaml
           sparse-checkout-cone-mode: false
       - run: |
-          echo
-          `apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: node-js-server-stage
-            labels:
-              app: node-js-server-stage
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: node-js-server-stage
-            template:
-              metadata:
-                labels:
-                  app: node-js-server-stage
-              spec:
-                containers:
-                - name: node-js-server-stage
-                  image: docker pull registry.devopsnow.io/internal/node-js-server:d676c0b2
-                  ports:
-                  - containerPort: 3000` > manifests/stage/deployment-new.yaml
+          date > manifests/stage/deployment-new.yaml
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
           echo "SHA= ${GITHUB_SHA}"
           echo "SHORT SHA= ${SHORT_SHA}"
