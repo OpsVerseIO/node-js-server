@@ -320,7 +320,7 @@ jobs:
         with:
           add: 'manifests/stage/deployment.yaml'
           default_author: github_actions
-          # cwd: 'manifests/stage'
+          cwd: '.'
           message: '[STAGE] Update the image tag'
           pull: '--rebase --autostash ...'
           push: true
