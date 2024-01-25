@@ -313,14 +313,14 @@ jobs:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
 
-      - run: echo "123" > ../../manifests/stage/deployment.yaml
+      - run: echo "123" > manifests/stage/deployment.yaml
 
       - name: "Commit the image tag to GitHub"
         uses: EndBug/add-and-commit@v9
         with:
-          add: '../../manifests/stage/deployment.yaml'
+          add: 'manifests/stage/deployment.yaml'
           default_author: github_actions
-          cwd: '../../manifests/stage'
+          cwd: 'manifests/stage'
           message: '[STAGE] Update the image tag'
           pull: '--rebase --autostash ...'
           push: true
