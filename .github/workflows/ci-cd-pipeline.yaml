@@ -322,7 +322,27 @@ jobs:
             manifests/stage/deployment.yaml
           sparse-checkout-cone-mode: false
       - run: |
-          date > manifests/stage/date.txt
+          `apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: node-js-server-stage
+            labels:
+              app: node-js-server-stage
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: node-js-server-stage
+            template:
+              metadata:
+                labels:
+                  app: node-js-server-stage
+              spec:
+                containers:
+                - name: node-js-server-stage
+                  image: docker pull registry.devopsnow.io/internal/node-js-server:d676c0b2
+                  ports:
+                  - containerPort: 3000` > manifests/stage/deployment-new.yaml
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
