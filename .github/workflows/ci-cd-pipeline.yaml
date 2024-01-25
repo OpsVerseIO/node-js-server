@@ -313,6 +313,25 @@ jobs:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
 
+      - name: "Checkout the repository"
+        uses: actions/checkout@v4
+        with:
+          path: main
+          token: ${{ secrets.GH_PAT }}
+          sparse-checkout: |
+            manifests/stage/deployment.yaml
+          sparse-checkout-cone-mode: false
+      - run: |
+          Hash is ${SHORT_SHA} > generated.txt
+      # git config user.name github-actions
+      # git config user.email github-actions@github.com
+      # git add .
+      # git commit -m "[STAGE] Update the image tag"
+      # git push
+        # with:
+        #   repository: "https://github.com/gitops-tools/image-updater"
+        #   path: '.'
+
       - run: echo "123" > /home/runner/work/node-js-server/node-js-server/manifests/stage/deployment.yaml
 
       - name: "Commit the image tag to GitHub"
