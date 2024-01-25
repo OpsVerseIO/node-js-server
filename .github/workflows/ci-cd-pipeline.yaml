@@ -322,12 +322,12 @@ jobs:
             manifests/stage/deployment.yaml
           sparse-checkout-cone-mode: false
       - run: |
-          Hash is ${SHORT_SHA} > generated.txt
-      # git config user.name github-actions
-      # git config user.email github-actions@github.com
-      # git add .
-      # git commit -m "[STAGE] Update the image tag"
-      # git push
+          date > generated.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "[STAGE] Update the image tag"
+          git push
         # with:
         #   repository: "https://github.com/gitops-tools/image-updater"
         #   path: '.'
