@@ -387,8 +387,16 @@ jobs:
           echo "SHA= ${GITHUB_SHA}"
           echo "SHORT SHA= ${SHORT_SHA}"
 
-      - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+
+      # - name: "☁️ checkout repository"
+      #   uses: actions/checkout@v2
 
       - name: "🚀 Deploy to STAGE"
         run: |
