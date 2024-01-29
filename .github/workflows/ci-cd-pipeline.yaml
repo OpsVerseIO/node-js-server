@@ -395,8 +395,11 @@ jobs:
           curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x /usr/local/bin/argocd
 
-      # - name: "☁️ checkout repository"
-      #   uses: actions/checkout@v2
+      - name: Login to ArgoCD
+        run: argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+
+      - name: Trigger ArgoCD Deployment
+        run: argocd app sync ${{ secrets.ARGOCD_APP_NAME }}
 
       - name: "🚀 Deploy to STAGE"
         run: |
