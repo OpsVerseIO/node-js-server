@@ -324,8 +324,8 @@ jobs:
           propertyPath: 'spec.template.spec.containers.image'
           value: ${SHORT_SHA}
           repository: "OpsVerseIO/node-js-server"
-          branch: deployment
-          createPR: true
+          branch: main
+          createPR: false
           message: 'Update Image Version'
           token: ${{ secrets.GH_PAT }}
           workDir: main
