@@ -305,10 +305,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: "🔧 Add dynamic envs"
+        id: "image-tag"
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
           echo "SHA= ${GITHUB_SHA}"
           echo "SHORT SHA= ${SHORT_SHA}"
+          echo "::set-output name=version::$SHORT_SHA"
 
       - name: Checkout Target Repository
         uses: actions/checkout@v3
@@ -323,7 +325,7 @@ jobs:
           # repository: "OpsVerseIO/node-js-server"
           valueFile: 'manifests/stage/deployment.yaml'
           propertyPath: 'spec.template.spec.containers[0].image'
-          value: registry.devopsnow.io/internal/node-js-server:${SHORT_SHA}
+          value: 'registry.devopsnow.io/internal/node-js-server:${{ steps.image-tag.outputs.version }}'
           branch: main
           createPR: false
           message: '[STAGE] Update Image tag of node-js-server'
