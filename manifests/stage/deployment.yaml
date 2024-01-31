@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-js-server-stage
+  name: registry.devopsnow.io/internal/node-js-server:opsverse
   labels:
     app: registry.devopsnow.io/internal/node-js-server:opsverse
 spec:
