@@ -313,7 +313,8 @@ jobs:
       - name: Checkout Target Repository
         uses: actions/checkout@v3
         with:
-          repository: owner/target-repository
+          repository: "https://github.com/OpsVerseIO/node-js-server"
+          path: main
           token: ${{ secrets.GH_PAT }}
 
       - name: Update Image Version in the related HelmChart values.yaml
