@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-js-server-prod
+  namespace: "ops"
   labels:
     app: node-js-server-prod
 spec:
