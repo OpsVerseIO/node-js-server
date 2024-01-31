@@ -323,7 +323,7 @@ jobs:
           valueFile: 'manifests/stage/deployment.yaml'
           propertyPath: 'spec.template.spec.containers.image'
           value: ${SHORT_SHA}
-          repository: "https://github.com/OpsVerseIO/node-js-server"
+          repository: "OpsVerseIO/node-js-server"
           branch: main
           createPR: false
           message: 'Update Image Version'
