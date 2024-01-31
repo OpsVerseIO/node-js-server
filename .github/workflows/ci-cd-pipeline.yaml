@@ -323,7 +323,7 @@ jobs:
           # repository: "OpsVerseIO/node-js-server"
           valueFile: 'manifests/stage/deployment.yaml'
           propertyPath: 'spec.template.spec.containers[0].image'
-          value: "registry.devopsnow.io/internal/node-js-server:opsverse"
+          value: registry.devopsnow.io/internal/node-js-server:${SHORT_SHA}
           branch: main
           createPR: false
           message: '[STAGE] Update Image tag of node-js-server'
