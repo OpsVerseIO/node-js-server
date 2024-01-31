@@ -9,7 +9,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: registry.devopsnow.io/internal/node-js-server:opsverse
+      app: node-js-server-stage
   template:
     metadata:
       labels:
