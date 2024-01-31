@@ -329,6 +329,8 @@ jobs:
           message: 'Update Image Version'
           token: ${{ secrets.GH_PAT }}
           workDir: main
+          masterBranchName: main
+          targetBranch: main
 
   update-image-stage:
     name: "📝 Update stage image tag"
