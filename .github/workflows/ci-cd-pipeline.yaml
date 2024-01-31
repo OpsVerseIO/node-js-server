@@ -350,49 +350,49 @@ jobs:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
 
-      - name: "Checkout the repository"
-        uses: actions/checkout@v4
-        with:
-          path: main
-          token: ${{ secrets.GH_PAT }}
-          sparse-checkout: |
-            manifests/stage/deployment.yaml
-          sparse-checkout-cone-mode: false
-      - run: |
-          export YAML_FILE="apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: node-js-server-stage
-            labels:
-              app: node-js-server-stage
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: node-js-server-stage
-            template:
-              metadata:
-                labels:
-                  app: node-js-server-stage
-              spec:
-                containers:
-                - name: node-js-server-stage
-                  image: docker pull registry.devopsnow.io/internal/node-js-server:${SHORT_SHA}
-                  ports:
-                  - containerPort: 3000"
-          echo $YAML_FILE > manifests/stage/deployment-aravind.yaml
-          date > manifests/stage/deployment-new.yaml
-          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-          echo "SHA= ${GITHUB_SHA}"
-          echo "SHORT SHA= ${SHORT_SHA}"
-          git config user.name github-actions
-          git config user.email github-actions@opsverse.io
-          git add .
-          git commit -m "[STAGE] Update the image tag"
-          git push
-        # with:
-        #   repository: "https://github.com/gitops-tools/image-updater"
-        #   path: '.'
+      # - name: "Checkout the repository"
+      #   uses: actions/checkout@v4
+      #   with:
+      #     path: main
+      #     token: ${{ secrets.GH_PAT }}
+      #     sparse-checkout: |
+      #       manifests/stage/deployment.yaml
+      #     sparse-checkout-cone-mode: false
+      # - run: |
+      #     export YAML_FILE="apiVersion: apps/v1
+      #     kind: Deployment
+      #     metadata:
+      #       name: node-js-server-stage
+      #       labels:
+      #         app: node-js-server-stage
+      #     spec:
+      #       replicas: 1
+      #       selector:
+      #         matchLabels:
+      #           app: node-js-server-stage
+      #       template:
+      #         metadata:
+      #           labels:
+      #             app: node-js-server-stage
+      #         spec:
+      #           containers:
+      #           - name: node-js-server-stage
+      #             image: docker pull registry.devopsnow.io/internal/node-js-server:${SHORT_SHA}
+      #             ports:
+      #             - containerPort: 3000"
+      #     echo $YAML_FILE > manifests/stage/deployment-aravind.yaml
+      #     date > manifests/stage/deployment-new.yaml
+      #     echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      #     echo "SHA= ${GITHUB_SHA}"
+      #     echo "SHORT SHA= ${SHORT_SHA}"
+      #     git config user.name github-actions
+      #     git config user.email github-actions@opsverse.io
+      #     git add .
+      #     git commit -m "[STAGE] Update the image tag"
+      #     git push
+      #   # with:
+      #   #   repository: "https://github.com/gitops-tools/image-updater"
+      #   #   path: '.'
 
       # - run: echo "123" > /home/runner/work/node-js-server/node-js-server/manifests/stage/deployment.yaml
 
