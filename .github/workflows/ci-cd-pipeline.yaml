@@ -292,9 +292,8 @@ jobs:
       - name: "📂 Push the image to artifactory"
         run: docker push "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
 
-
-  update-image-dev:
-    name: "Update DEV image"
+  update-image-stage:
+    name: "📝 Update stage image tag"
     runs-on: ubuntu-latest
     needs:
       - lint
@@ -336,83 +335,7 @@ jobs:
           force: true
           updateFile: true
 
-  update-image-stage:
-    name: "📝 Update stage image tag"
-    runs-on: ubuntu-latest
-    needs:
-      - lint
-      - test
-      - opa
-      - visualize
-      - build
-    timeout-minutes: 10
-    steps:
-      - name: "🔧 Add dynamic envs"
-        run: |
-          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-          echo "SHA= ${GITHUB_SHA}"
-          echo "SHORT SHA= ${SHORT_SHA}"
-
-      - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
-
-      # - name: "Checkout the repository"
-      #   uses: actions/checkout@v4
-      #   with:
-      #     path: main
-      #     token: ${{ secrets.GH_PAT }}
-      #     sparse-checkout: |
-      #       manifests/stage/deployment.yaml
-      #     sparse-checkout-cone-mode: false
-      # - run: |
-      #     export YAML_FILE="apiVersion: apps/v1
-      #     kind: Deployment
-      #     metadata:
-      #       name: node-js-server-stage
-      #       labels:
-      #         app: node-js-server-stage
-      #     spec:
-      #       replicas: 1
-      #       selector:
-      #         matchLabels:
-      #           app: node-js-server-stage
-      #       template:
-      #         metadata:
-      #           labels:
-      #             app: node-js-server-stage
-      #         spec:
-      #           containers:
-      #           - name: node-js-server-stage
-      #             image: docker pull registry.devopsnow.io/internal/node-js-server:${SHORT_SHA}
-      #             ports:
-      #             - containerPort: 3000"
-      #     echo $YAML_FILE > manifests/stage/deployment-aravind.yaml
-      #     date > manifests/stage/deployment-new.yaml
-      #     echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-      #     echo "SHA= ${GITHUB_SHA}"
-      #     echo "SHORT SHA= ${SHORT_SHA}"
-      #     git config user.name github-actions
-      #     git config user.email github-actions@opsverse.io
-      #     git add .
-      #     git commit -m "[STAGE] Update the image tag"
-      #     git push
-      #   # with:
-      #   #   repository: "https://github.com/gitops-tools/image-updater"
-      #   #   path: '.'
-
-      # - run: echo "123" > /home/runner/work/node-js-server/node-js-server/manifests/stage/deployment.yaml
-
-      # - name: "Commit the image tag to GitHub"
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #     add: '/home/runner/work/node-js-server/node-js-server/manifests/stage/deployment.yaml'
-      #     default_author: github_actions
-      #     cwd: '/home/runner/work/node-js-server'
-      #     message: '[STAGE] Update the image tag'
-      #     pull: '--rebase --autostash ...'
-      #     push: true
-
-  argo-sync-stage:
+  release-stage:
     name: "⏳ ArgoCD Sync Stage"
     runs-on: ubuntu-latest
     needs:
@@ -446,36 +369,8 @@ jobs:
 
       - name: "🚀 Deploy to STAGE"
         run: |
-            echo "⏳ Sync"
-            echo "🚀✅💚 Successfully synced STAGE ArgoCD"
-
-  release-stage:
-    environment:
-      name: stage
-    name: "🚀 Deploy to STAGE"
-    needs:
-      - lint
-      - test
-      - opa
-      - visualize
-      - build
-      - argo-sync-stage
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: "🔧 Add dynamic envs"
-        run: |
-          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-
-      - name: "🚀 Deploy to STAGE"
-        run: |
             echo "⏳ Deploying the application to STAGE"
-            echo "🚀✅💚 Successfully deployed the application to STAGE"
+            echo "🚀✅💚 Successfully synced STAGE ArgoCD and deployed the application to STAGE"
 
   integration-test:
     name: "🚨 Run integration test suite"
@@ -485,7 +380,6 @@ jobs:
       - opa
       - visualize
       - build
-      - argo-sync-stage
       - release-stage
     runs-on: ubuntu-latest
     steps:
@@ -503,7 +397,6 @@ jobs:
       - opa
       - visualize
       - build
-      - argo-sync-stage
       - release-stage
       - integration-test
     runs-on: ubuntu-latest 
@@ -565,6 +458,52 @@ jobs:
           echo "End OPA Policy Check"
           echo "✅💚 Quality gate passed"
 
+  update-image-prod:
+    name: "📝 Update prod image tag"
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - test
+      - opa
+      - visualize
+      - build
+      - release-stage
+      - integration-test
+      - integration-test-opa
+    timeout-minutes: 10
+    steps:
+      - name: "🔧 Add dynamic envs"
+        id: "image-tag"
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+          echo "SHA= ${GITHUB_SHA}"
+          echo "SHORT SHA= ${SHORT_SHA}"
+          echo "::set-output name=version::$SHORT_SHA"
+
+      - name: Checkout Target Repository
+        uses: actions/checkout@v3
+        with:
+          repository: "OpsVerseIO/node-js-server-manifests"
+          path: main
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          repository: "OpsVerseIO/node-js-server-manifests"
+          valueFile: 'manifests/prod/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers[0].image'
+          value: 'registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}'
+          branch: main
+          createPR: false
+          message: '[PROD] Update Image tag of node-js-server'
+          token: ${{ secrets.GH_PAT }}
+          workDir: main
+          masterBranchName: main
+          targetBranch: main
+          force: true
+          updateFile: true
+
   release-prod:
     environment:
       name: production
@@ -575,10 +514,10 @@ jobs:
       - opa
       - visualize
       - build
-      - argo-sync-stage
       - release-stage
       - integration-test
       - integration-test-opa
+      - update-image-prod
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -590,11 +529,25 @@ jobs:
       - name: "🔧 Add dynamic envs"
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+
+      - name: Login to ArgoCD
+        run: argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+
+      - name: Trigger ArgoCD Deployment
+        run: argocd app sync ${{ secrets.ARGOCD_APP_NAME }}
 
       - name: "🚀 Deploy to PROD ENV"
         run: |
           echo "⏳ Deploying the application to PROD"
-          echo "🚀✅💚 Successfully deployed the application to PROD" 
+          echo "🚀✅💚 Successfully synced PROD ArgoCD and deployed the application to PROD"
 
   cleanup:
     name: "♻️ Cleanup actions"
