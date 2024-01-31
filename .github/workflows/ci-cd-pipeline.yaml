@@ -322,10 +322,11 @@ jobs:
         with:
           valueFile: 'manifests/stage/deployment.yaml'
           propertyPath: 'spec.template.spec.containers.image'
-          value: ${SHORT_SHA}
+          value: "opsverse-test"
           repository: "OpsVerseIO/node-js-server"
-          branch: main
-          createPR: false
+          branch: deployment
+          # branch: main
+          createPR: true
           message: 'Update Image Version'
           token: ${{ secrets.GH_PAT }}
           workDir: main
@@ -333,6 +334,7 @@ jobs:
           targetBranch: main
           force: true
           updateFile: true
+          message: 'Update Image Version"
 
   update-image-stage:
     name: "📝 Update stage image tag"
