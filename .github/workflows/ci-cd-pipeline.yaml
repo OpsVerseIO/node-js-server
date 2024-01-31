@@ -334,7 +334,7 @@ jobs:
           targetBranch: main
           force: true
           updateFile: true
-          message: 'Update Image Version"
+          message: "Update Image Version"
 
   update-image-stage:
     name: "📝 Update stage image tag"
