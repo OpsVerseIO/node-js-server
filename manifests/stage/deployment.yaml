@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-js-server-stage
+  name: registry.devopsnow.io/internal/node-js-server:opsverse
   labels:
     app: node-js-server-stage
 spec:
@@ -15,7 +15,7 @@ spec:
         app: node-js-server-stage
     spec:
       containers:
-      - name: node-js-server-stage
-        image: registry.devopsnow.io/internal/node-js-server:d676c0b2
-        ports:
-        - containerPort: 3000
+        - name: node-js-server-stage
+          image: registry.devopsnow.io/internal/node-js-server:d676c0b2
+          ports:
+            - containerPort: 3000
