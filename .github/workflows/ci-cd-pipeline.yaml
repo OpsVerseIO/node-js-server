@@ -322,7 +322,7 @@ jobs:
         with:
           # repository: "OpsVerseIO/node-js-server"
           valueFile: 'manifests/stage/deployment.yaml'
-          propertyPath: 'spec.template.spec.containers.image'
+          propertyPath: 'metadata.name'
           value: "registry.devopsnow.io/internal/node-js-server:opsverse"
           branch: main
           createPR: false
