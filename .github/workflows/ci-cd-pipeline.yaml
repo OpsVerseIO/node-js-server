@@ -332,6 +332,7 @@ jobs:
           masterBranchName: main
           targetBranch: main
           force: true
+          updateFile: true
 
   update-image-stage:
     name: "📝 Update stage image tag"
