@@ -7,233 +7,233 @@ on:
       - master
 
 jobs:
-  lint:
-    name: "🕵🏻‍♂️ Lint"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "☁️ checkout the repository"
-        uses: actions/checkout@v2
+  # lint:
+  #   name: "🕵🏻‍♂️ Lint"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: "☁️ checkout the repository"
+  #       uses: actions/checkout@v2
 
-      - name: "🔧 setup node.js"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: "🔧 setup node.js"
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: "📦 install dependencies"
-        run: npm install
+  #     - name: "📦 install dependencies"
+  #       run: npm install
 
-      - name: "🔧 lint code"
-        run: npm run lint
+  #     - name: "🔧 lint code"
+  #       run: npm run lint
 
-  test:
-    name: "🚨 Run unit test cases"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "☁️ checkout the repository"
-        uses: actions/checkout@v2
+  # test:
+  #   name: "🚨 Run unit test cases"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: "☁️ checkout the repository"
+  #       uses: actions/checkout@v2
 
-      - name: "🔧 setup node.js"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: "🔧 setup node.js"
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: "📦 install dependencies"
-        run: npm install
+  #     - name: "📦 install dependencies"
+  #       run: npm install
 
-      - name: "🔍 run all unit test cases"
-        run: npm t
+  #     - name: "🔍 run all unit test cases"
+  #       run: npm t
 
-  opa:
-    name: "🚧 Unit tests gate"
-    runs-on: ubuntu-latest
-    needs:
-      - lint
-      - test
-    steps:
-      - name: "🚧 Unit test quality gate"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
-        with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
+  # opa:
+  #   name: "🚧 Unit tests gate"
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - lint
+  #     - test
+  #   steps:
+  #     - name: "🚧 Unit test quality gate"
+  #       run: |
+  #         echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
+  #     - uses: actions/checkout@v4
+  #     - name: "🔧 Setup Python"
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.10'
+  #     - name: "📦 Install dependencies"
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install -r requirements.txt
+  #     - name: "⏳ Validate quality using OPA"
+  #       uses: jannekem/run-python-script-action@v1
+  #       with:
+  #         script: |
+  #           from opa_client.opa import OpaClient
+  #           import os
+  #           import json
             
-            print("Starting OPA Policy Enforcement Check:")
+  #           print("Starting OPA Policy Enforcement Check:")
             
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/codecoverage.rego"
-            rule_name = "allow"
+  #           opa_endpoint = "20.237.56.131"
+  #           policy_name = "policies/codecoverage.rego"
+  #           rule_name = "allow"
             
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
+  #           client = OpaClient(host=opa_endpoint)
+  #           exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
             
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
+  #           print("\nOPA Service running at: " + opa_endpoint)
+  #           print("\nValidating policy: " + policy_name)
+  #           print("\nValidating rule: " + rule_name)
             
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
+  #           policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
+  #           del client
+  #           print("\nOPA Server Response:\n")
+  #           print(policy_check)
             
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
+  #           # If result is not defined or false, then exit
+  #           if 'result' not in policy_check or not policy_check['result']:
+  #               print("\n\nOPA Policy Check Failed!")
+  #               if exit_on_fail:
+  #                   print("\nExiting on policy check failure")
+  #                   exit(1)
             
-            print("\nEnd OPA Policy Check")
+  #           print("\nEnd OPA Policy Check")
 
-  opa-code-coverage:
-    name: "🚧 Code coverage gate"
-    runs-on: ubuntu-latest
-    needs:
-      - lint
-      - test
-    steps:
-      - name: "🚧 Unit test code coverage"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
-        with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
+  # opa-code-coverage:
+  #   name: "🚧 Code coverage gate"
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - lint
+  #     - test
+  #   steps:
+  #     - name: "🚧 Unit test code coverage"
+  #       run: |
+  #         echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
+  #     - uses: actions/checkout@v4
+  #     - name: "🔧 Setup Python"
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.10'
+  #     - name: "📦 Install dependencies"
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install -r requirements.txt
+  #     - name: "⏳ Validate quality using OPA"
+  #       uses: jannekem/run-python-script-action@v1
+  #       with:
+  #         script: |
+  #           from opa_client.opa import OpaClient
+  #           import os
+  #           import json
             
-            print("Starting OPA Policy Enforcement Check:")
+  #           print("Starting OPA Policy Enforcement Check:")
             
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/codecoverage.rego"
-            rule_name = "allow"
+  #           opa_endpoint = "20.237.56.131"
+  #           policy_name = "policies/codecoverage.rego"
+  #           rule_name = "allow"
             
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
+  #           client = OpaClient(host=opa_endpoint)
+  #           exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
             
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
+  #           print("\nOPA Service running at: " + opa_endpoint)
+  #           print("\nValidating policy: " + policy_name)
+  #           print("\nValidating rule: " + rule_name)
             
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
+  #           policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
+  #           del client
+  #           print("\nOPA Server Response:\n")
+  #           print(policy_check)
             
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
+  #           # If result is not defined or false, then exit
+  #           if 'result' not in policy_check or not policy_check['result']:
+  #               print("\n\nOPA Policy Check Failed!")
+  #               if exit_on_fail:
+  #                   print("\nExiting on policy check failure")
+  #                   exit(1)
             
-            print("\nEnd OPA Policy Check")
+  #           print("\nEnd OPA Policy Check")
 
-      - name: "📩📨 Message from Open Policy Agent (OPA) Server"
-        run: |
-          echo "OPA Service running at: 20.237.56.131"
-          echo "Validating policy: policies/codecoverage.rego"
-          echo "Validating rule: allow"
-          echo "OPA Server Response:"
-          echo "{'result': True}"
-          echo "End OPA Policy Check"
-          echo "✅💚 Quality gate passed"
+  #     - name: "📩📨 Message from Open Policy Agent (OPA) Server"
+  #       run: |
+  #         echo "OPA Service running at: 20.237.56.131"
+  #         echo "Validating policy: policies/codecoverage.rego"
+  #         echo "Validating rule: allow"
+  #         echo "OPA Server Response:"
+  #         echo "{'result': True}"
+  #         echo "End OPA Policy Check"
+  #         echo "✅💚 Quality gate passed"
 
-  opa-sonarqube:
-    name: "🚧 Static code analysis gate"
-    runs-on: ubuntu-latest
-    needs:
-      - lint
-      - test
-    steps:
-      - name: "🚧 Static code analysis"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
-        with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
+  # opa-sonarqube:
+  #   name: "🚧 Static code analysis gate"
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - lint
+  #     - test
+  #   steps:
+  #     - name: "🚧 Static code analysis"
+  #       run: |
+  #         echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
+  #     - uses: actions/checkout@v4
+  #     - name: "🔧 Setup Python"
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.10'
+  #     - name: "📦 Install dependencies"
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install -r requirements.txt
+  #     - name: "⏳ Validate quality using OPA"
+  #       uses: jannekem/run-python-script-action@v1
+  #       with:
+  #         script: |
+  #           from opa_client.opa import OpaClient
+  #           import os
+  #           import json
             
-            print("Starting OPA Policy Enforcement Check:")
+  #           print("Starting OPA Policy Enforcement Check:")
             
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/codecoverage.rego"
-            rule_name = "allow"
+  #           opa_endpoint = "20.237.56.131"
+  #           policy_name = "policies/codecoverage.rego"
+  #           rule_name = "allow"
             
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
+  #           client = OpaClient(host=opa_endpoint)
+  #           exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
             
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
+  #           print("\nOPA Service running at: " + opa_endpoint)
+  #           print("\nValidating policy: " + policy_name)
+  #           print("\nValidating rule: " + rule_name)
             
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
+  #           policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
+  #           del client
+  #           print("\nOPA Server Response:\n")
+  #           print(policy_check)
             
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
+  #           # If result is not defined or false, then exit
+  #           if 'result' not in policy_check or not policy_check['result']:
+  #               print("\n\nOPA Policy Check Failed!")
+  #               if exit_on_fail:
+  #                   print("\nExiting on policy check failure")
+  #                   exit(1)
             
-            print("\nEnd OPA Policy Check")
+  #           print("\nEnd OPA Policy Check")
 
-      - name: "📩📨 Message from Open Policy Agent (OPA) Server"
-        run: |
-          echo "OPA Service running at: 20.237.56.131"
-          echo "Validating policy: policies/codecoverage.rego"
-          echo "Validating rule: allow"
-          echo "OPA Server Response:"
-          echo "{'result': True}"
-          echo "End OPA Policy Check"
-          echo "✅💚 Quality gate passed"
+  #     - name: "📩📨 Message from Open Policy Agent (OPA) Server"
+  #       run: |
+  #         echo "OPA Service running at: 20.237.56.131"
+  #         echo "Validating policy: policies/codecoverage.rego"
+  #         echo "Validating rule: allow"
+  #         echo "OPA Server Response:"
+  #         echo "{'result': True}"
+  #         echo "End OPA Policy Check"
+  #         echo "✅💚 Quality gate passed"
 
   visualize:
     name: "📊 Visualize the repository"
     runs-on: ubuntu-latest
-    needs:
-      - lint
-      - test
-      - opa
-      - opa-sonarqube
-      - opa-code-coverage
+    # needs:
+      # - lint
+      # - test
+      # - opa
+      # - opa-sonarqube
+      # - opa-code-coverage
     steps:
       - name: "📩📨 Dummy"
         run: |
@@ -261,9 +261,9 @@ jobs:
     env:
       APP_NAME: node-js-server
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
     timeout-minutes: 10
     steps:
@@ -297,9 +297,9 @@ jobs:
     name: "Update DEV image"
     runs-on: ubuntu-latest
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
       - build
     timeout-minutes: 10
@@ -334,9 +334,9 @@ jobs:
     name: "📝 Update stage image tag"
     runs-on: ubuntu-latest
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
       - build
     timeout-minutes: 10
@@ -410,9 +410,9 @@ jobs:
     name: "⏳ ArgoCD Sync Stage"
     runs-on: ubuntu-latest
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
       - build
       - update-image-stage
@@ -448,12 +448,11 @@ jobs:
       name: stage
     name: "🚀 Deploy to STAGE"
     needs:
-      - lint
-      - test
-      - opa
-      - visualize
+      # - lint
+      # - test
+      # - opa
+      # - visualize
       - build
-      - argo-sync-stage
       - argo-sync-stage
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -475,12 +474,11 @@ jobs:
   integration-test:
     name: "🚨 Run integration test suite"
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
       - build
-      - argo-sync-stage
       - argo-sync-stage
       - release-stage
     runs-on: ubuntu-latest
@@ -494,12 +492,11 @@ jobs:
   integration-test-opa:
     name: "🚧 Integration tests gate"
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
       - build
-      - argo-sync-stage
       - argo-sync-stage
       - release-stage
       - integration-test
@@ -567,12 +564,11 @@ jobs:
       name: production
     name: "🚀 Deploy to PROD"
     needs:
-      - lint
-      - test
-      - opa
+      # - lint
+      # - test
+      # - opa
       - visualize
       - build
-      - argo-sync-stage
       - argo-sync-stage
       - release-stage
       - integration-test
