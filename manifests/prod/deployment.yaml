@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-js-server-prod
-  namespace: "ops"
+  namespace: opsverse-test
   labels:
     app: node-js-server-prod
 spec:
@@ -16,7 +16,7 @@ spec:
         app: node-js-server-prod
     spec:
       containers:
-      - name: node-js-server-prod
-        image: docker pull registry.devopsnow.io/internal/node-js-server:d676c0b2
-        ports:
-        - containerPort: 3000
+        - name: node-js-server-prod
+          image: docker pull registry.devopsnow.io/internal/node-js-server:d676c0b2
+          ports:
+            - containerPort: 3000
