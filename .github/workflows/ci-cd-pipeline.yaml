@@ -321,12 +321,12 @@ jobs:
         uses: fjogeleit/yaml-update-action@main
         with:
           # repository: "OpsVerseIO/node-js-server"
-          valueFile: 'manifests/prod/deployment.yaml'
-          propertyPath: 'metadata.namespace'
-          value: "opsverse-test"
+          valueFile: 'manifests/stage/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers.image'
+          value: registry.devopsnow.io/internal/node-js-server:${SHORT_SHA}
           branch: main
           createPR: false
-          message: 'Update Image Version'
+          message: '[STAGE] Update Image tag of node-js-server'
           token: ${{ secrets.GH_PAT }}
           workDir: main
           masterBranchName: main
