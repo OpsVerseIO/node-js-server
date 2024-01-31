@@ -313,7 +313,7 @@ jobs:
       - name: Checkout Target Repository
         uses: actions/checkout@v3
         with:
-          repository: "OpsVerseIO/github.com/OpsVerseIO/node-js-server"
+          repository: "OpsVerseIO/node-js-server"
           path: main
           token: ${{ secrets.GH_PAT }}
 
