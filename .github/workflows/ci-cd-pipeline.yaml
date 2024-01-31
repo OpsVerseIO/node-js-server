@@ -328,7 +328,7 @@ jobs:
           createPR: false
           message: 'Update Image Version'
           token: ${{ secrets.GH_PAT }}
-          # workDir: infrastructure
+          workDir: main
 
   update-image-stage:
     name: "📝 Update stage image tag"
