@@ -1,15 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-js-server-stage
-  namespace: stage
+  name: registry.devopsnow.io/internal/node-js-server:opsverse
   labels:
     app: registry.devopsnow.io/internal/node-js-server:opsverse
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: node-js-server-stage
+      app: registry.devopsnow.io/internal/node-js-server:opsverse
   template:
     metadata:
       labels:
@@ -17,6 +16,6 @@ spec:
     spec:
       containers:
         - name: node-js-server-stage
-          image: registry.devopsnow.io/internal/node-js-server:4ea57df7
+          image: registry.devopsnow.io/internal/node-js-server:5b77efeb
           ports:
             - containerPort: 3000
