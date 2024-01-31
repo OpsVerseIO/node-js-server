@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: node-js-server-stage
-          image: registry.devopsnow.io/internal/node-js-server:c843f21d
+          image: registry.devopsnow.io/internal/node-js-server:4ea57df7
           ports:
             - containerPort: 3000
