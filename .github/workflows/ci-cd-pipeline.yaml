@@ -322,6 +322,7 @@ jobs:
       - name: Update Image Version in the related HelmChart values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
+          repository: "OpsVerseIO/node-js-server-manifests"
           valueFile: 'manifests/stage/deployment.yaml'
           propertyPath: 'spec.template.spec.containers[0].image'
           value: 'registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}'
