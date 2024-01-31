@@ -293,6 +293,42 @@ jobs:
         run: docker push "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
 
 
+  update-image-dev:
+    name: "Update DEV image"
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - test
+      - opa
+      - visualize
+      - build
+    timeout-minutes: 10
+    steps:
+      - name: "🔧 Add dynamic envs"
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+          echo "SHA= ${GITHUB_SHA}"
+          echo "SHORT SHA= ${SHORT_SHA}"
+
+      - name: Checkout Target Repository
+        uses: actions/checkout@v3
+        with:
+          repository: owner/target-repository
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'manifests/stage/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers.image'
+          value: ${SHORT_SHA}
+          repository: "https://github.com/OpsVerseIO/node-js-server"
+          branch: main
+          createPR: false
+          message: 'Update Image Version'
+          token: ${{ secrets.GH_PAT }}
+          # workDir: infrastructure
+
   update-image-stage:
     name: "📝 Update stage image tag"
     runs-on: ubuntu-latest
