@@ -359,7 +359,7 @@ jobs:
 
       - name: Trigger ArgoCD Sync/Deployment in PROD
         id: argocd-sync
-        uses: opsverse/argocd-sync@0.1.0
+        uses: OpsVerseIO/argocd-sync@0.1.0
         with:
           argoCdUrl: ${{ secrets.ARGOCD_SERVER }}
           argoCdUsername: ${{ secrets.ARGOCD_USERNAME }}
@@ -531,7 +531,7 @@ jobs:
       
       - name: Trigger ArgoCD Sync/Deployment in PROD
         id: argocd-sync
-        uses: opsverse/argocd-sync@0.1.0
+        uses: OpsVerseIO/argocd-sync@0.1.0
         with:
           argoCdUrl: ${{ secrets.ARGOCD_SERVER }}
           argoCdUsername: ${{ secrets.ARGOCD_USERNAME }}
