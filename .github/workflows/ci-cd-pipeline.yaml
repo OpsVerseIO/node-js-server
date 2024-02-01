@@ -318,8 +318,8 @@ jobs:
           path: main
           token: ${{ secrets.GH_PAT }}
 
-      - name: Update Image Version in the related HelmChart values.yaml
-        uses: fjogeleit/yaml-update-action@main
+      - name: "📝 Update Image tag Version in the STAGE manifest file"
+        uses: OpsVerseIO/image-updater-action@0.1.0
         with:
           repository: "OpsVerseIO/node-js-server-manifests"
           valueFile: 'manifests/stage/deployment.yaml'
@@ -475,8 +475,8 @@ jobs:
           path: main
           token: ${{ secrets.GH_PAT }}
 
-      - name: Update Image Version in the related HelmChart values.yaml
-        uses: fjogeleit/yaml-update-action@main
+      - name: "📝 Update Image tag Version in the PROD manifest file"
+        uses: OpsVerseIO/image-updater-action@0.1.0
         with:
           repository: "OpsVerseIO/node-js-server-manifests"
           valueFile: 'manifests/prod/deployment.yaml'
@@ -509,10 +509,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # - name: "☁️ checkout repository"
-      #   uses: actions/checkout@v2
-      #   with:
-      #     fetch-depth: 0
       
       - name: "🔧 Trigger ArgoCD Sync/Deployment in PROD"
         uses: OpsVerseIO/argocd-sync@0.1.0
