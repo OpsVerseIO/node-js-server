@@ -353,19 +353,18 @@ jobs:
           echo "SHA= ${GITHUB_SHA}"
           echo "SHORT SHA= ${SHORT_SHA}"
 
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v1
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
 
-      - name: Install ArgoCD CLI
-        run: |
-          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          chmod +x /usr/local/bin/argocd
-
-      - name: Login to ArgoCD
-        run: argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
-
-      - name: Trigger ArgoCD Deployment
-        run: argocd app sync ${{ secrets.ARGOCD_APP_NAME }}
+      - name: Trigger ArgoCD Sync/Deployment in PROD
+        id: argocd-sync
+        uses: opsverse/argocd-sync@0.1.0
+        with:
+          argoCdUrl: ${{ secrets.ARGOCD_SERVER }}
+          argoCdUsername: ${{ secrets.ARGOCD_USERNAME }}
+          argoCdToken: ${{ secrets.ARGOCD_TOKEN }}
+          argoCdAppName: ${{ secrets.ARGOCD_STAGE_APP_NAME }}
 
       - name: "🚀 Deploy to STAGE"
         run: |
@@ -530,19 +529,14 @@ jobs:
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
       
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v1
-
-      - name: Install ArgoCD CLI
-        run: |
-          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          chmod +x /usr/local/bin/argocd
-
-      - name: Login to ArgoCD
-        run: argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
-
-      - name: Trigger ArgoCD Deployment
-        run: argocd app sync ${{ secrets.ARGOCD_APP_NAME }}
+      - name: Trigger ArgoCD Sync/Deployment in PROD
+        id: argocd-sync
+        uses: opsverse/argocd-sync@0.1.0
+        with:
+          argoCdUrl: ${{ secrets.ARGOCD_SERVER }}
+          argoCdUsername: ${{ secrets.ARGOCD_USERNAME }}
+          argoCdToken: ${{ secrets.ARGOCD_TOKEN }}
+          argoCdAppName: ${{ secrets.ARGOCD_PROD_APP_NAME }}
 
       - name: "🚀 Deploy to PROD ENV"
         run: |
