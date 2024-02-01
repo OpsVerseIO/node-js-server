@@ -543,13 +543,18 @@ jobs:
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
       
       - name: Trigger ArgoCD Sync/Deployment in PROD
-        id: argocd-sync
-        uses: OpsVerseIO/argocd-sync@0.1.0
+        # id: argocd-sync
+        uses: omegion/argocd-actions@v1.1
         with:
-          argoCdUrl: ${{ secrets.ARGOCD_SERVER }}
-          argoCdUsername: ${{ secrets.ARGOCD_USERNAME }}
-          argoCdToken: ${{ secrets.ARGOCD_TOKEN }}
-          argoCdAppName: ${{ secrets.ARGOCD_PROD_APP_NAME }}
+          address: ${{ secrets.ARGOCD_SERVER }}
+          token: ${{ secrets.ARGOCD_TOKEN }}
+          action: sync
+          appName: ${{ secrets.ARGOCD_PROD_APP_NAME }}
+        # with:
+        #   argoCdUrl: ${{ secrets.ARGOCD_SERVER }}
+        #   argoCdUsername: ${{ secrets.ARGOCD_USERNAME }}
+        #   argoCdToken: ${{ secrets.ARGOCD_TOKEN }}
+        #   argoCdAppName: ${{ secrets.ARGOCD_PROD_APP_NAME }}
 
       - name: "🚀 Deploy to PROD ENV"
         run: |
