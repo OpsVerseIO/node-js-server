@@ -377,7 +377,7 @@ jobs:
         run: argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
 
       - name: Trigger ArgoCD Deployment
-        run: argocd app sync ${{ secrets.ARGOCD_APP_NAME }}
+        run: argocd app sync ${{ secrets.ARGOCD_STAGE_APP_NAME }}
 
       - name: "🚀 Deploy to STAGE"
         run: |
