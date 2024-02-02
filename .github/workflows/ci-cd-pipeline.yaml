@@ -319,16 +319,16 @@ jobs:
           path: main
           token: ${{ secrets.GH_PAT }}
 
-      - name: "📝 Update Image tag Version in the STAGE manifest file"
+      - name: "📝 Update Image tag Version in the DEV manifest file"
         uses: OpsVerseIO/image-updater-action@0.1.0
         with:
           repository: "OpsVerseIO/node-js-server-manifests"
           valueFile: 'manifests/helm/stage/node-js-server/values.yaml'
-          propertyPath: 'node-js-sever.image.tag'
+          propertyPath: 'nodejssever.image.tag'
           value: '${{ env.SHORT_SHA }}'
           branch: main
           createPR: false
-          message: '[STAGE] Update Image tag of node-js-server'
+          message: '[DEV] Update Image tag of node-js-server'
           token: ${{ secrets.GH_PAT }}
           workDir: main
           masterBranchName: main
