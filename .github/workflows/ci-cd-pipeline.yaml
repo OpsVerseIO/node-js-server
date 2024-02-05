@@ -50,52 +50,13 @@ jobs:
       - lint
       - test
     steps:
-      - name: "🚧 Unit test quality gate"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
       - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
+        uses: OpsVerseIO/opa-policy-check@0.1.0
         with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
-            
-            print("Starting OPA Policy Enforcement Check:")
-            
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/codecoverage.rego"
-            rule_name = "allow"
-            
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
-            
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
-            
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
-            
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
-            
-            print("\nEnd OPA Policy Check")
+          opaServerUrl: "https://opa-opsverse.int.devopsnow.io"
+          opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
+          opaServerInput: '{"input": null}'
+          opaServerPackageName: "example/include"
 
   opa-code-coverage:
     name: "🚧 Code coverage gate"
@@ -104,62 +65,13 @@ jobs:
       - lint
       - test
     steps:
-      - name: "🚧 Unit test code coverage"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
       - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
+        uses: OpsVerseIO/opa-policy-check@0.1.0
         with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
-            
-            print("Starting OPA Policy Enforcement Check:")
-            
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/codecoverage.rego"
-            rule_name = "allow"
-            
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
-            
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
-            
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
-            
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
-            
-            print("\nEnd OPA Policy Check")
-
-      - name: "📩📨 Message from Open Policy Agent (OPA) Server"
-        run: |
-          echo "OPA Service running at: 20.237.56.131"
-          echo "Validating policy: policies/codecoverage.rego"
-          echo "Validating rule: allow"
-          echo "OPA Server Response:"
-          echo "{'result': True}"
-          echo "End OPA Policy Check"
-          echo "✅💚 Quality gate passed"
+          opaServerUrl: "https://opa-opsverse.int.devopsnow.io"
+          opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
+          opaServerInput: '{"input": null}'
+          opaServerPackageName: "example/include"
 
   opa-sonarqube:
     name: "🚧 Static code analysis gate"
@@ -168,52 +80,13 @@ jobs:
       - lint
       - test
     steps:
-      - name: "🚧 Static code analysis"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
       - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
+        uses: OpsVerseIO/opa-policy-check@0.1.0
         with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
-            
-            print("Starting OPA Policy Enforcement Check:")
-            
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/codecoverage.rego"
-            rule_name = "allow"
-            
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
-            
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
-            
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"codecoverage\": 90}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
-            
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
-            
-            print("\nEnd OPA Policy Check")
+          opaServerUrl: "https://opa-opsverse.int.devopsnow.io"
+          opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
+          opaServerInput: '{"input": null}'
+          opaServerPackageName: "example/include"
 
       - name: "📩📨 Message from Open Policy Agent (OPA) Server"
         run: |
@@ -433,52 +306,13 @@ jobs:
       - integration-test
     runs-on: ubuntu-latest 
     steps:
-      - name: "🚧 Integration tests quality"
-        run: |
-          echo "⌛ Connecting to Open Policy Agent (OPA) at: opa.opsverse.io"
-      - uses: actions/checkout@v4
-      - name: "🔧 Setup Python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: "📦 Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
       - name: "⏳ Validate quality using OPA"
-        uses: jannekem/run-python-script-action@v1
+        uses: OpsVerseIO/opa-policy-check@0.1.0
         with:
-          script: |
-            from opa_client.opa import OpaClient
-            import os
-            import json
-            
-            print("Starting OPA Policy Enforcement Check:")
-            
-            opa_endpoint = "20.237.56.131"
-            policy_name = "policies/unittest.rego"
-            rule_name = "allow"
-            
-            client = OpaClient(host=opa_endpoint)
-            exit_on_fail = os.environ.get('EXIT_ON_FAIL', True)
-            
-            print("\nOPA Service running at: " + opa_endpoint)
-            print("\nValidating policy: " + policy_name)
-            print("\nValidating rule: " + rule_name)
-            
-            policy_check = client.check_permission(input_data=json.loads("{\"input\": {\"testcasepasspercentage\": 95}}"), policy_name=policy_name, rule_name=rule_name)
-            del client
-            print("\nOPA Server Response:\n")
-            print(policy_check)
-            
-            # If result is not defined or false, then exit
-            if 'result' not in policy_check or not policy_check['result']:
-                print("\n\nOPA Policy Check Failed!")
-                if exit_on_fail:
-                    print("\nExiting on policy check failure")
-                    exit(1)
-            
-            print("\nEnd OPA Policy Check")
+          opaServerUrl: "https://opa-opsverse.int.devopsnow.io"
+          opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
+          opaServerInput: '{"input": null}'
+          opaServerPackageName: "example/include"
 
       - name: "📩📨 Message from Open Policy Agent (OPA) Server"
         run: |
