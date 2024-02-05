@@ -88,16 +88,6 @@ jobs:
           opaServerInput: '{"input": null}'
           opaServerPackageName: "example/include"
 
-      - name: "📩📨 Message from Open Policy Agent (OPA) Server"
-        run: |
-          echo "OPA Service running at: 20.237.56.131"
-          echo "Validating policy: policies/codecoverage.rego"
-          echo "Validating rule: allow"
-          echo "OPA Server Response:"
-          echo "{'result': True}"
-          echo "End OPA Policy Check"
-          echo "✅💚 Quality gate passed"
-
   visualize:
     name: "📊 Visualize the repository"
     runs-on: ubuntu-latest
@@ -111,22 +101,22 @@ jobs:
       - name: "📩📨 Visualize the repository"
         run: |
           echo "📊 Visualize the repository"
-      # - name: "☁️ Checkout repository"
-      #   uses: actions/checkout@v4
+      - name: "☁️ Checkout repository"
+        uses: actions/checkout@v4
 
-      # - name: "📊 Repository visualizer"
-      #   uses: githubocto/repo-visualizer@0.7.1
-      #   with:
-      #     excluded_paths: "node_modules,.github"
-      #     # output_file: "src/diagram.svg"
-      #     # should_push: false
-      #     # root_path: "/"
+      - name: "📊 Repository visualizer"
+        uses: githubocto/repo-visualizer@0.7.1
+        with:
+          excluded_paths: "node_modules,.github"
+          # output_file: "src/diagram.svg"
+          # should_push: false
+          # root_path: "/"
 
-      # - name: "📊 Visualiser artifacts"
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: diagram
-      #     path: public/diagram.svg
+      - name: "📊 Visualiser artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: diagram
+          path: public/diagram.svg
 
   build:
     name: "📦 Build docker image"
@@ -313,16 +303,6 @@ jobs:
           opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
           opaServerInput: '{"input": null}'
           opaServerPackageName: "example/include"
-
-      - name: "📩📨 Message from Open Policy Agent (OPA) Server"
-        run: |
-          echo "OPA Service running at: 20.237.56.131"
-          echo "Validating policy: policies/codecoverage.rego"
-          echo "Validating rule: allow"
-          echo "OPA Server Response:"
-          echo "{'result': True}"
-          echo "End OPA Policy Check"
-          echo "✅💚 Quality gate passed"
 
   update-image-prod:
     name: "📝 Update prod image tag"
