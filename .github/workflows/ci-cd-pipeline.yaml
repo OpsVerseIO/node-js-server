@@ -156,8 +156,8 @@ jobs:
         run: docker push "registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}"
 
 
-  update-image-dev:
-    name: "📝 Update dev image tag"
+  update-image-stage:
+    name: "📝 Update STAGE image tag"
     runs-on: ubuntu-latest
     needs:
       - lint
@@ -185,8 +185,8 @@ jobs:
       - name: "📝 Update Image tag Version in the DEV manifest file"
         uses: OpsVerseIO/image-updater-action@0.1.0
         with:
-          repository: "OpsVerseIO/node-js-server-manifests"
-          valueFile: 'manifests/helm/stage/node-js-server/values.yaml'
+          repository: "OpsVerseIO/deployment-manifests"
+          valueFile: 'node-js-server/helm/stage/node-js-server/values.yaml'
           propertyPath: 'nodejssever.image.tag'
           value: '${{ env.SHORT_SHA }}'
           branch: main
@@ -199,7 +199,7 @@ jobs:
           force: true
           updateFile: true
 
-  update-image-stage:
+  update-image-stage-k8s-manifest:
     name: "📝 Update stage image tag"
     runs-on: ubuntu-latest
     needs:
@@ -221,7 +221,7 @@ jobs:
       - name: Checkout Target Repository
         uses: actions/checkout@v3
         with:
-          repository: "OpsVerseIO/node-js-server-manifests"
+          repository: "OpsVerseIO/deployment-manifests"
           path: main
           token: ${{ secrets.GH_PAT }}
 
@@ -229,7 +229,7 @@ jobs:
         uses: OpsVerseIO/image-updater-action@0.1.0
         with:
           repository: "OpsVerseIO/node-js-server-manifests"
-          valueFile: 'manifests/stage/deployment.yaml'
+          valueFile: 'node-js-server/stage/deployment.yaml'
           propertyPath: 'spec.template.spec.containers[0].image'
           value: 'registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}'
           branch: main
@@ -336,9 +336,15 @@ jobs:
       - name: "📝 Update Image tag Version in the PROD manifest file"
         uses: OpsVerseIO/image-updater-action@0.1.0
         with:
-          repository: "OpsVerseIO/node-js-server-manifests"
-          valueFile: 'manifests/prod/deployment.yaml'
-          propertyPath: 'spec.template.spec.containers[0].image'
+          repository: "OpsVerseIO/deployment-manifests"
+          # Uncomment this if you want to use vanilla K8S manifests
+          # valueFile: 'node-js-server/prod/node-js-server/values.yaml'
+          # Uncomment this if you want to use Helm
+          valueFile: 'node-js-server/helm/prod/node-js-server/values.yaml'
+          # Uncomment this if you want to use Helm
+          propertyPath: 'nodejssever.image.tag'
+          # Uncomment this if you want to use vanilla K8S manifests
+          # propertyPath: 'spec.template.spec.containers[0].image'
           value: 'registry.devopsnow.io/internal/node-js-server:${{ env.SHORT_SHA }}'
           branch: main
           createPR: false
