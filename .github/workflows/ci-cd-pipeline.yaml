@@ -80,7 +80,7 @@ jobs:
       - sonarcloud
     steps:
       - name: "Print Output"
-      - run: echo ${{needs.sonarcloud.outputs.sonarcloud_output}}
+        run: echo ${{needs.sonarcloud.outputs.sonarcloud_output}}
       
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
