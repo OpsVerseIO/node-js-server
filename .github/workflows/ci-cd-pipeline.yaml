@@ -43,12 +43,26 @@ jobs:
       - name: "🔍 run all unit test cases"
         run: npm t
 
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   opa:
     name: "🚧 Unit tests gate"
     runs-on: ubuntu-latest
     needs:
       - lint
       - test
+      - sonarcloud
     steps:
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
@@ -64,6 +78,7 @@ jobs:
     needs:
       - lint
       - test
+      - sonarcloud
     steps:
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
@@ -79,6 +94,7 @@ jobs:
     needs:
       - lint
       - test
+      - sonarcloud
     steps:
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
@@ -94,6 +110,7 @@ jobs:
     needs:
       - lint
       - test
+      - sonarcloud
       - opa
       - opa-sonarqube
       - opa-code-coverage
@@ -126,6 +143,7 @@ jobs:
     needs:
       - lint
       - test
+      - sonarcloud
       - opa
       - visualize
     timeout-minutes: 10
