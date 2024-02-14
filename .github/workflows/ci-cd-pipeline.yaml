@@ -68,6 +68,8 @@ jobs:
         env:
          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    outputs:
+      sonarcloud_output: ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}
 
   opa:
     name: "🚧 Unit tests gate"
@@ -77,6 +79,9 @@ jobs:
       - test
       - sonarcloud
     steps:
+      - name: "Print Output"
+      - run: echo ${{needs.sonarcloud.outputs.sonarcloud_output}}
+      
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
         with:
