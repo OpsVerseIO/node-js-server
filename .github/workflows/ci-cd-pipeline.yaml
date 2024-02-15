@@ -93,7 +93,8 @@ jobs:
             import os
             import json
 
-            print(${{needs.sonarcloud.outputs.sonar_quality_gate_project_status}})
+            dict = json.loads(${{needs.sonarcloud.outputs.sonar_quality_gate_project_status}})
+            print(dict)
             # print("Starting OPA Policy Enforcement Check:")
             
             # opa_endpoint = "20.237.56.131"
