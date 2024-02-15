@@ -71,7 +71,7 @@ jobs:
          SET_SONAR_PROJECT_STATUS: true
     outputs:
       sonarcloud_output: ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}
-      quality_gate_project_status: ${{ steps.sonarqube-quality-gate-check.outputs.quality_gate_project_status }}
+      sonar_quality_gate_project_status: ${{ steps.sonarqube-quality-gate-check.outputs.quality_gate_project_status }}
 
   opa:
     name: "🚧 Unit tests gate"
@@ -82,7 +82,9 @@ jobs:
       - sonarcloud
     steps:
       - name: "Print Output"
-        run: echo ${{needs.sonarcloud.outputs.quality_gate_project_status}}
+        run: |
+          echo ${{needs.sonarcloud.outputs.sonarcloud_output}}
+          echo ${{needs.sonarcloud.outputs.sonar_quality_gate_project_status}}
       
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
