@@ -62,14 +62,16 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
+        uses: opsverseio/sonarqube-quality-gate-action@0.1.0
         # Force to fail step after specific time.
         timeout-minutes: 5
         env:
          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+         SET_SONAR_PROJECT_STATUS: true
     outputs:
       sonarcloud_output: ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}
+      quality_gate_project_status: ${{ steps.sonarqube-quality-gate-check.outputs.quality_gate_project_status }}
 
   opa:
     name: "🚧 Unit tests gate"
@@ -80,7 +82,7 @@ jobs:
       - sonarcloud
     steps:
       - name: "Print Output"
-        run: echo ${{needs.sonarcloud.outputs.sonarcloud_output}}
+        run: echo ${{needs.sonarcloud.outputs.quality_gate_project_status}}
       
       - name: "⏳ Validate quality using OPA"
         uses: OpsVerseIO/opa-policy-check@0.1.0
