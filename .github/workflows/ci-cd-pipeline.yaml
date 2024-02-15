@@ -87,7 +87,7 @@ jobs:
           echo ${{needs.sonarcloud.outputs.sonar_quality_gate_project_status}}
       
       - name: "⏳ Validate quality using OPA"
-        uses: OpsVerseIO/opa-policy-check@0.1.0
+        uses: OpsVerseIO/opa-policy-check@0.3.0
         with:
           opaServerUrl: "http://opa-opsverse.int.devopsnow.io"
           opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
@@ -103,7 +103,7 @@ jobs:
       - sonarcloud
     steps:
       - name: "⏳ Validate quality using OPA"
-        uses: OpsVerseIO/opa-policy-check@0.1.0
+        uses: OpsVerseIO/opa-policy-check@0.3.0
         with:
           opaServerUrl: "http://opa-opsverse.int.devopsnow.io"
           opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
@@ -119,7 +119,7 @@ jobs:
       - sonarcloud
     steps:
       - name: "⏳ Validate quality using OPA"
-        uses: OpsVerseIO/opa-policy-check@0.1.0
+        uses: OpsVerseIO/opa-policy-check@0.3.0
         with:
           opaServerUrl: "http://opa-opsverse.int.devopsnow.io"
           opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
@@ -337,7 +337,7 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - name: "⏳ Validate quality using OPA"
-        uses: OpsVerseIO/opa-policy-check@0.1.0
+        uses: OpsVerseIO/opa-policy-check@0.3.0
         with:
           opaServerUrl: "https://opa-opsverse.int.devopsnow.io"
           opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
