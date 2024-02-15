@@ -91,7 +91,7 @@ jobs:
         with:
           opaServerUrl: "http://opa-opsverse.int.devopsnow.io"
           opaServerAuthToken: ${{ secrets.OPA_SERVER_AUTH_TOKEN }}
-          opaServerInput: '{"input": null}'
+          opaServerInput: '{"input": { "status": ${{needs.sonarcloud.outputs.sonarcloud_output}}, "environment": "prod"}}'
           opaServerPackageName: "example/include"
 
   opa-code-coverage:
