@@ -1,0 +1,42 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: node-js-server
+  description: NodeJS Server App
+  tags:
+    - node.js
+    - js
+    - backend
+    - typescript
+  links:
+    - url: https://deploynow-opsverse-demo-us.us-east4.gcp.opsverse.cloud/applications/opsverse-demo-us-cd/frontend-app
+      title: Deploy
+      icon: dashboard
+    - url: https://opsverse-demo-us.us-east4.gcp.opsverse.cloud/?orgId=1&var-Cluster=opsverse-demo&var-namespace=opsverse-demo
+      title: Observe
+      icon: dashboard
+  annotations:
+    backstage.io/kubernetes-namespace: default
+    backstage.io/kubernetes-id: default
+    github.com/project-slug: OpsVerseIO/microservices-demo/src/frontend
+    backstage.io/techdocs-ref: dir:.
+    argocd/app-name: frontend-app
+    sonarqube.org/project-key: OpsVerseIO_installers
+    pagerduty.com/integration-key: 18729fbf5cc84a00d0c7d3bcfa4779e0
+    prometheus.io/rule: container_memory_usage_bytes{pod=~".*frontend.*"},sum by (container) (rate(container_cpu_usage_seconds_total{pod=~".*frontend.*"}[5m]))
+    # snyk.io/org-id: 8062b916-2b60-433c-859c-917197f39ed4
+    # snyk.io/target-id: 057c220e-3a1a-4b30-a543-2b8200629c35
+    # snyk.io/targets: OpsVerseIO/sample-apps
+    # snyk.io/org-name: snykdemo40
+    # snyk.io/project-ids: 8363d446-5835-4986-9300-ca470ee08757
+    # fossa.io/project-name: sample-apps
+spec:
+  type: service
+  lifecycle: production
+  owner: OpsVerse-Engineering-Team
+  system: online-store
+  providesApis:
+    - store-api
+  consumesApis:
+    - petstore
+  dependsOn: ['component:AdService','component:CheckoutService','component:ShippingService','component:CurrencyService','component:ProductCatalogService','component:RecomendationService','component:CartService']
