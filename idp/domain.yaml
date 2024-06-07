@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: cornexgen
+  description: Everything related to cornexgen
+  links:
+    - url: http://example.com/domain/audio/
+      title: cornexgen standards
+    - url: http://example.com/domains/audio/dashboard
+      title: Domain Metrics Dashboard
+      icon: dashboard
+spec:
+  owner: opsverse
