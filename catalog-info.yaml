@@ -36,7 +36,7 @@ spec:
   owner: OpsVerse-Engineering-Team
   system: online-store
   providesApis:
-    - store-api
+    - node-js-server
   consumesApis:
     - petstore
   dependsOn: ['component:AdService','component:CheckoutService','component:ShippingService','component:CurrencyService','component:ProductCatalogService','component:RecomendationService','component:CartService']
