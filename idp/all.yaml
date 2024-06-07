@@ -10,3 +10,4 @@ spec:
     - ./opsverse-team.yaml
     - ./org.yaml
     - ./platform-group.yaml
+    - ./domain.yaml
