@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: node-js-server
+  description: NodeJS App Server
+spec:
+  owner: platform-team
+  domain: catalog
