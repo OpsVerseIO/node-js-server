@@ -20,10 +20,10 @@ metadata:
     backstage.io/kubernetes-id: default
     github.com/project-slug: OpsVerseIO/microservices-demo/src/frontend
     backstage.io/techdocs-ref: dir:.
-    argocd/app-name: frontend-app
-    sonarqube.org/project-key: OpsVerseIO_installers
-    pagerduty.com/integration-key: 18729fbf5cc84a00d0c7d3bcfa4779e0
-    prometheus.io/rule: container_memory_usage_bytes{pod=~".*frontend.*"},sum by (container) (rate(container_cpu_usage_seconds_total{pod=~".*frontend.*"}[5m]))
+    # argocd/app-name: frontend-app
+    # sonarqube.org/project-key: OpsVerseIO_installers
+    # pagerduty.com/integration-key: 18729fbf5cc84a00d0c7d3bcfa4779e0
+    # prometheus.io/rule: container_memory_usage_bytes{pod=~".*frontend.*"},sum by (container) (rate(container_cpu_usage_seconds_total{pod=~".*frontend.*"}[5m]))
     # snyk.io/org-id: 8062b916-2b60-433c-859c-917197f39ed4
     # snyk.io/target-id: 057c220e-3a1a-4b30-a543-2b8200629c35
     # snyk.io/targets: OpsVerseIO/sample-apps
