@@ -9,16 +9,16 @@ spec:
     displayName: Platform Team
     email: platform-team@corcentric.com
     picture: https://api.dicebear.com/7.x/identicon/svg?seed=Fluffy&backgroundType=solid,gradientLinear&backgroundColor=ffd5dc,b6e3f4
-  parent: backstage
+  # parent: backstage
   children: []
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: Aravind N
+  name: aravind.n
 spec:
   profile:
-    # Intentional no displayName for testing
+    displayName: Aravind N
     email: aravind@opsverse.io
     picture: https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&backgroundColor=transparent
   memberOf: [platform-team]
