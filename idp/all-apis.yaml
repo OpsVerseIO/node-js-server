@@ -5,4 +5,5 @@ metadata:
   description: A collection of all Backstage example APIs
 spec:
   targets:
-    - ./idp/node-js-server-api.yaml
+    # - ./idp/node-js-server-api.yaml
+    - ./node-js-server-api.yaml
