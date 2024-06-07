@@ -38,4 +38,4 @@ spec:
   providesApis:
     - node-js-server
   consumesApis:
-    - petstore
+    - node-js-server
