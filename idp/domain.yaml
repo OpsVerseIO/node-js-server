@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Domain
 metadata:
-  name: cornexgen
+  name: catalog
   description: Everything related to cornexgen
   links:
     - url: http://example.com/domain/audio/
