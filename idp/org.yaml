@@ -23,10 +23,4 @@ metadata:
   description: A collection of all Backstage example Groups
 spec:
   targets:
-    - ./infrastructure-group.yaml
-    - ./boxoffice-group.yaml
-    - ./backstage-group.yaml
-    - ./team-a-group.yaml
-    - ./team-b-group.yaml
-    - ./team-c-group.yaml
-    - ./team-d-group.yaml
+    - ./platform-group.yaml
