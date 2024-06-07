@@ -33,7 +33,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: OpsVerse-Engineering-Team
+  owner: platform-team
   system: online-store
   providesApis:
     - node-js-server
