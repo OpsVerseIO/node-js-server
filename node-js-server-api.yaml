@@ -19,4 +19,4 @@ spec:
   lifecycle: experimental
   owner: team-c
   definition:
-    $text: ./petstore.oas.yaml
+    $text: ./node-js-server.oas.yaml
