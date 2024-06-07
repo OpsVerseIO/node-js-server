@@ -34,7 +34,7 @@ spec:
   type: service
   lifecycle: production
   owner: platform-team
-  system: online-store
+  system: node-js-server
   providesApis:
     - node-js-server
   consumesApis:
